@@ -2,7 +2,9 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from '../screens/Home';
-import Settings from '../screens/Settings';
+import CompressPDF from '../screens/CompressPDF';
+import CompressImg from '../screens/CompressImg';
+import PDFtoDoc from '../screens/PDFtoDoc';
 
 const Stack = createNativeStackNavigator();
 const AppNav = () => {
@@ -10,7 +12,9 @@ const AppNav = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
-        {/* <Stack.Screen name="Setting" component={Settings} /> */}
+        <Stack.Screen name="CompressPDF" component={CompressPDF} />
+        <Stack.Screen name="CompressImg" component={CompressImg} />
+        <Stack.Screen name="PDFtoDoc" component={PDFtoDoc} />
       </Stack.Navigator>
     </NavigationContainer>
   );
