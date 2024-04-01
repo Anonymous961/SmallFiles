@@ -10,7 +10,7 @@ const AppNav = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Setting" component={Settings} />
+        {/* <Stack.Screen name="Setting" component={Settings} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
