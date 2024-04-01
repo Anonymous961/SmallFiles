@@ -1,6 +1,15 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
 
-const RenderItem = ({item}) => {
+type Slides = {
+  key: string;
+  title: string;
+  text: string;
+  image: object;
+  backgroundColor: string;
+};
+
+const RenderItem = ({item}: {item: Slides}) => {
   return (
     <View
       style={{

@@ -8,7 +8,7 @@
 import React, {useState} from 'react';
 import AppNav from './navigation/Appnav';
 import AppIntroSlider from 'react-native-app-intro-slider';
-import slides from './assests/slides';
+import slides from './utils/slides';
 import RenderItem from './components/slidesRender';
 
 function App(): React.JSX.Element {
