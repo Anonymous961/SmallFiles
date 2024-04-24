@@ -14,49 +14,61 @@ import RNFetchBlob from 'rn-fetch-blob';
 const Download = ({route, navigation}) => {
   const {message, output_file} = route.params;
   console.log(message, output_file);
-  const handleDownload = async () => {
-    try {
-      const response = await RNFetchBlob.config({
-        fileCache: true,
-      })
-        .fetch('GET', `${BACKEND_URL}/download/${output_file}`)
-        .then(res => {
-          console.log(res);
-          console.log('file downloaded');
-        })
-        .catch(e => {
-          console.log('invoice download ==>', e);
-        });
+  const actualDownload = () => {
+    const {dirs} = RNFetchBlob.fs;
+    const dirToSave =
+      Platform.OS === 'ios' ? dirs.DocumentDir : dirs.DownloadDir;
+    const configfb = {
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        mediaScannable: true,
+        title: `${output_file}`,
+        path: `${dirs.DownloadDir}/${output_file}`,
+      },
+      useDownloadManager: true,
+      notification: true,
+      mediaScannable: true,
+      title: `${output_file}`,
+      path: `${dirToSave}/${output_file}`,
+    };
+    const configOptions = Platform.select({
+      ios: configfb,
+      android: configfb,
+    });
 
-      // Get the file path where the file is saved
-      const filePath = response.path();
-      console.log(filePath);
-      // Open the file using a file manager
-      if (Platform.OS === 'android') {
-        await RNFetchBlob.android.actionViewIntent(filePath, 'application/pdf');
-      }
-      navigation.goBack();
-    } catch (err) {
-      console.log(err);
-      navigation.goBack();
-    }
+    RNFetchBlob.config(configOptions || {})
+      .fetch('GET', `${BACKEND_URL}/download/${output_file}`, {})
+      .then(res => {
+        if (Platform.OS === 'ios') {
+          RNFetchBlob.fs.writeFile(configfb.path, res.data, 'base64');
+          RNFetchBlob.ios.previewDocument(configfb.path);
+        }
+        if (Platform.OS === 'android') {
+          console.log('file downloaded');
+        }
+      })
+      .catch(e => {
+        console.log('invoice Download==>', e);
+      });
   };
   const getPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('Storage permission granted');
-        handleDownload();
-      } else {
-        console.log('Storage permission denied');
-        // Optionally, you can inform the user about the importance of the permission
-        // and prompt them to grant it again in the future if needed.
+    if (Platform.OS === 'ios') {
+      actualDownload();
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          actualDownload();
+        } else {
+          console.log('please grant permission');
+        }
+      } catch (err) {
+        console.log('display error', err);
       }
-    } catch (error) {
-      console.error('Error requesting storage permission:', error);
-      // Handle permission request error
     }
   };
   return (
