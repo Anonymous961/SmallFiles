@@ -1,10 +1,45 @@
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useState} from 'react';
 import {pick, types} from 'react-native-document-picker';
+import {BACKEND_URL} from '@env';
+import axios from 'axios';
 
-const CompressImg = () => {
+const CompressImg = ({navigation}) => {
   const [image, setImage] = useState(null);
-  return (
+  const [isLoading, setIsLoading] = useState(false);
+  console.log(BACKEND_URL);
+  const handleCompress = async () => {
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append('file', image);
+      formData.append('quality', '65');
+
+      const response = await axios.post(
+        `${BACKEND_URL}/compressimage`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+      console.log(response.data);
+      setIsLoading(false);
+      navigation.push('Download', response.data);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
+  return !isLoading ? (
     <View style={styles.container}>
       {image && (
         <View>
@@ -33,11 +68,15 @@ const CompressImg = () => {
         <Text style={styles.buttonText}>Select File</Text>
       </TouchableOpacity>
       {image && (
-        <TouchableOpacity style={[styles.customButton, styles.Button]}>
+        <TouchableOpacity
+          style={[styles.customButton, styles.Button]}
+          onPress={handleCompress}>
           <Text style={styles.buttonText}>Compress Image</Text>
         </TouchableOpacity>
       )}
     </View>
+  ) : (
+    <ActivityIndicator size={'large'} />
   );
 };
 
