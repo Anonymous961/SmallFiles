@@ -5,22 +5,36 @@ import {
   StyleSheet,
   Image,
   ActivityIndicator,
+  TextInput,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import {pick, types} from 'react-native-document-picker';
 import {BACKEND_URL} from '@env';
 import axios from 'axios';
 
+interface Image {
+  name: string;
+  uri: string;
+}
+
 const CompressImg = ({navigation}) => {
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<Image | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  console.log(BACKEND_URL);
+  const [quality, setQuality] = useState<number>(60);
+  const checkQuality = () => {
+    if (!(quality >= 10 && quality <= 90)) {
+      Alert.alert('Invalid quality entered');
+      return false;
+    }
+    return true;
+  };
   const handleCompress = async () => {
     try {
       setIsLoading(true);
       const formData = new FormData();
       formData.append('file', image);
-      formData.append('quality', '65');
+      formData.append('quality', quality);
 
       const response = await axios.post(
         `${BACKEND_URL}/compressimage`,
@@ -31,7 +45,6 @@ const CompressImg = ({navigation}) => {
           },
         },
       );
-      console.log(response.data);
       setIsLoading(false);
       navigation.push('Download', response.data);
     } catch (error) {
@@ -39,10 +52,16 @@ const CompressImg = ({navigation}) => {
       console.log(error);
     }
   };
+  const handleTextChange = (text: string) => {
+    const parsedNumber = parseFloat(text);
+    if (!isNaN(parsedNumber)) {
+      setQuality(parsedNumber);
+    }
+  };
   return !isLoading ? (
     <View style={styles.container}>
       {image && (
-        <View>
+        <View style={styles.preview}>
           <Image source={{uri: image.uri}} style={{height: 250, width: 300}} />
           <Text style={[styles.field, styles.lightText]}>
             File Name:
@@ -58,7 +77,6 @@ const CompressImg = ({navigation}) => {
             type: [types.images],
           })
             .then(res => {
-              console.log(res[0]);
               setImage(res[0]);
             })
             .catch(err => {
@@ -68,9 +86,20 @@ const CompressImg = ({navigation}) => {
         <Text style={styles.buttonText}>Select File</Text>
       </TouchableOpacity>
       {image && (
+        <TextInput
+          style={[styles.quality]}
+          onChangeText={handleTextChange}
+          value={quality.toString()}
+          placeholder="Enter between 20-80"
+          keyboardType="numeric"
+        />
+      )}
+      {image && (
         <TouchableOpacity
           style={[styles.customButton, styles.Button]}
-          onPress={handleCompress}>
+          onPress={() => {
+            if (checkQuality()) handleCompress();
+          }}>
           <Text style={styles.buttonText}>Compress Image</Text>
         </TouchableOpacity>
       )}
@@ -100,6 +129,12 @@ const styles = StyleSheet.create({
   lightText: {
     color: '#000000',
   },
+  preview: {
+    margin: 10,
+    maxWidth: '80%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   Button: {
     marginBottom: 10,
     padding: 8,
@@ -117,8 +152,12 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
-  preview: {
-    margin: 10,
+  quality: {
+    borderWidth: 1,
+    borderRadius: 3,
+    width: '80%',
+    marginBottom: 5,
+    fontSize: 18,
   },
 });
 

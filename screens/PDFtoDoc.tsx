@@ -8,20 +8,37 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {pick, types} from 'react-native-document-picker';
+import axios from 'axios';
+import {BACKEND_URL} from '@env';
 
 interface InputFile {
   name: string;
   size: number;
   type: string;
+  uri: string;
 }
 
-const PDFtoDoc = () => {
+const PDFtoDoc = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<InputFile | null>(null);
-  const handleConvert = () => {
+  const handleConvert = async () => {
     try {
       setIsLoading(true);
       console.log(selectedFile);
+      const formData = new FormData();
+      formData.append('file', {
+        uri: selectedFile?.uri,
+        name: selectedFile?.name,
+        type: selectedFile?.type,
+      });
+      const res = await axios.post(`${BACKEND_URL}/converttodoc`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log(res.data);
+      setIsLoading(false);
+      navigation.push('Download', res.data);
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -51,7 +68,6 @@ const PDFtoDoc = () => {
             type: [types.pdf, types.docx],
           })
             .then(res => {
-              console.log(res[0]);
               setSelectedFile(res[0]);
             })
             .catch(err => {
@@ -64,12 +80,15 @@ const PDFtoDoc = () => {
         <TouchableOpacity
           style={[styles.customButton, styles.Button]}
           onPress={handleConvert}>
-          <Text style={styles.buttonText}>Compress PDF</Text>
+          <Text style={styles.buttonText}>Convert to Doc</Text>
         </TouchableOpacity>
       )}
     </View>
   ) : (
-    <ActivityIndicator size={'large'} />
+    <View style={styles.container}>
+      <ActivityIndicator size={'large'} />
+      <Text style={styles.lightText}>Converting...</Text>
+    </View>
   );
 };
 
@@ -109,6 +128,7 @@ const styles = StyleSheet.create({
   },
   preview: {
     margin: 10,
+    maxWidth: '80%',
   },
   picker: {
     borderWidth: 2,

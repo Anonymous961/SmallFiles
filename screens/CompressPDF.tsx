@@ -16,6 +16,7 @@ interface InputFile {
   name: string;
   size: number;
   type: string;
+  uri: string;
 }
 const compressType = [
   {name: 'screen', value: 'screen', id: 'screen'},
@@ -150,6 +151,7 @@ const styles = StyleSheet.create({
   },
   preview: {
     margin: 10,
+    maxWidth: '80%',
   },
   picker: {
     borderWidth: 2,
