@@ -104,7 +104,10 @@ const CompressPDF = ({navigation}) => {
       )}
     </View>
   ) : (
-    <ActivityIndicator size={'large'} />
+    <View style={styles.container}>
+      <ActivityIndicator size={'large'} />
+      <Text style={styles.lightText}>Compressing...</Text>
+    </View>
   );
 };
 
@@ -124,6 +127,9 @@ const styles = StyleSheet.create({
   },
   lightText: {
     color: '#000000',
+  },
+  darkText: {
+    color: '#ffffff',
   },
   Button: {
     marginBottom: 10,

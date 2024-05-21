@@ -76,7 +76,10 @@ const CompressImg = ({navigation}) => {
       )}
     </View>
   ) : (
-    <ActivityIndicator size={'large'} />
+    <View style={styles.container}>
+      <ActivityIndicator size={'large'} />
+      <Text style={styles.lightText}>Compressing...</Text>
+    </View>
   );
 };
 

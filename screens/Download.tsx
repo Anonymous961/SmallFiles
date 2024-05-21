@@ -1,74 +1,49 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  PermissionsAndroid,
-  Platform,
-} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 import React from 'react';
-import {BACKEND_URL} from '@env';
-// import axios from 'axios';
-import RNFetchBlob from 'rn-fetch-blob';
+import {S3_BUCKET_URL} from '@env';
+// import RNFetchBlob from 'rn-fetch-blob';
+import RNFS from 'react-native-fs';
 
-const Download = ({route, navigation}) => {
-  const {message, output_file} = route.params;
-  console.log(message, output_file);
-  const actualDownload = () => {
-    const {dirs} = RNFetchBlob.fs;
-    const dirToSave =
-      Platform.OS === 'ios' ? dirs.DocumentDir : dirs.DownloadDir;
-    const configfb = {
-      fileCache: true,
-      addAndroidDownloads: {
-        useDownloadManager: true,
-        notification: true,
-        mediaScannable: true,
-        title: `${output_file}`,
-        path: `${dirs.DownloadDir}/${output_file}`,
-      },
-      useDownloadManager: true,
-      notification: true,
-      mediaScannable: true,
-      title: `${output_file}`,
-      path: `${dirToSave}/${output_file}`,
-    };
-    const configOptions = Platform.select({
-      ios: configfb,
-      android: configfb,
-    });
+const Download = ({route}) => {
+  const {message, output_file, uploaded_file} = route.params;
+  const [percentage, setPercentage] = React.useState<number>(0);
+  console.log(message, output_file, uploaded_file);
+  console.log(`${S3_BUCKET_URL}/${uploaded_file}`);
 
-    RNFetchBlob.config(configOptions || {})
-      .fetch('GET', `${BACKEND_URL}/download/${output_file}`, {})
-      .then(res => {
-        if (Platform.OS === 'ios') {
-          RNFetchBlob.fs.writeFile(configfb.path, res.data, 'base64');
-          RNFetchBlob.ios.previewDocument(configfb.path);
-        }
-        if (Platform.OS === 'android') {
-          console.log('file downloaded');
-        }
-      })
-      .catch(e => {
-        console.log('invoice Download==>', e);
-      });
+  const downloadFileBegin = () => {
+    console.log('Download Begin');
   };
-  const getPermission = async () => {
-    if (Platform.OS === 'ios') {
-      actualDownload();
-    } else {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          actualDownload();
-        } else {
-          console.log('please grant permission');
-        }
-      } catch (err) {
-        console.log('display error', err);
-      }
+
+  const downloadFileProgress = (data: any) => {
+    console.log('data', data, (100 * data.bytesWritten) / data.contentLength);
+    setPercentage(((100 * data.bytesWritten) / data.contentLength) | 0);
+    console.log('$$$$$$$$$$', percentage);
+  };
+  const handleDownload = async () => {
+    try {
+      const downloadPath = RNFS.DownloadDirectoryPath + `/${output_file}`;
+
+      RNFS.downloadFile({
+        begin: downloadFileBegin,
+        progress: downloadFileProgress,
+        fromUrl: `${S3_BUCKET_URL}/${uploaded_file}`,
+        toFile: downloadPath,
+      })
+        .promise.then(result => {
+          console.log('Download successful:', result);
+          setPercentage(100);
+          Alert.alert('File downloaded successfully');
+        })
+        .catch(error => {
+          console.log('Failed to download file:', error);
+          Alert.alert('File download failed');
+        });
+    } catch (error) {
+      console.log('FILE DOWNLOAD FAILED:', error);
+      Alert.alert(
+        'Download failed',
+        'There was an error while downloading the image.',
+      );
     }
   };
   return (
@@ -79,8 +54,8 @@ const Download = ({route, navigation}) => {
           <Text style={styles.file}>{output_file}</Text>
         </Text>
       </View>
-      <TouchableOpacity style={styles.customButton} onPress={getPermission}>
-        <Text style={styles.buttonText}>Download</Text>
+      <TouchableOpacity style={styles.customButton} onPress={handleDownload}>
+        <Text style={[styles.buttonText, styles.darkText]}>Download</Text>
       </TouchableOpacity>
     </View>
   );
@@ -100,6 +75,13 @@ const styles = StyleSheet.create({
     width: '80%',
     backgroundColor: '#3498DB',
     padding: 8,
+    margin: 5,
+  },
+  lightText: {
+    color: '#000000',
+  },
+  darkText: {
+    color: '#ffffff',
   },
   buttonText: {
     textAlign: 'center',
@@ -107,6 +89,7 @@ const styles = StyleSheet.create({
   },
   field: {
     fontSize: 20,
+    maxWidth: '80%',
     color: '#000000',
   },
 });
