@@ -1,23 +1,14 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import {pick, types} from 'react-native-document-picker';
 import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
 import {BACKEND_URL} from '@env';
+import {styles} from '../styles/globalStyles';
+import Loading from '../components/loading';
+import {InputFile} from '../utils/types';
+import PdfReview from '../components/pdfReview';
 
-interface InputFile {
-  name: string;
-  size: number;
-  type: string;
-  uri: string;
-}
 const compressType = [
   {name: 'screen', value: 'screen', id: 'screen'},
   {name: 'ebook', value: 'ebook', id: 'ebook'},
@@ -56,19 +47,7 @@ const CompressPDF = ({navigation}) => {
   };
   return !isLoading ? (
     <View style={styles.container}>
-      {selectedFile && (
-        <View style={styles.preview}>
-          <Image source={require('../assests/images/pdf-icon.png')} />
-          <Text style={[styles.field, styles.lightText]}>
-            File Name:
-            <Text style={styles.file}>{selectedFile.name}</Text>
-          </Text>
-          <Text style={[styles.field, styles.lightText]}>
-            File Size:
-            <Text style={styles.file}>{selectedFile.size / 1000} kb</Text>
-          </Text>
-        </View>
-      )}
+      {selectedFile && <PdfReview selectedFile={selectedFile} />}
       <TouchableOpacity
         style={[styles.selectButton, styles.Button]}
         onPress={() => {
@@ -105,63 +84,8 @@ const CompressPDF = ({navigation}) => {
       )}
     </View>
   ) : (
-    <View style={styles.container}>
-      <ActivityIndicator size={'large'} />
-      <Text style={styles.lightText}>Compressing...</Text>
-    </View>
+    <Loading label="Compressing" />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  field: {
-    fontSize: 22,
-    fontWeight: '400',
-    textAlign: 'center',
-  },
-  file: {
-    color: '#EA425C',
-  },
-  lightText: {
-    color: '#000000',
-  },
-  darkText: {
-    color: '#ffffff',
-  },
-  Button: {
-    marginBottom: 10,
-    padding: 8,
-    borderRadius: 3,
-    width: '80%',
-  },
-  customButton: {
-    backgroundColor: '#487EB0',
-  },
-  selectButton: {
-    backgroundColor: '#3498DB',
-  },
-  buttonText: {
-    fontSize: 20,
-    color: 'white',
-    textAlign: 'center',
-  },
-  preview: {
-    margin: 10,
-    maxWidth: '80%',
-  },
-  picker: {
-    borderWidth: 2,
-    margin: 5,
-    width: '80%',
-    borderColor: 'gray',
-    color: 'white',
-    backgroundColor: '#616C6F',
-    borderRadius: 5,
-  },
-});
 
 export default CompressPDF;

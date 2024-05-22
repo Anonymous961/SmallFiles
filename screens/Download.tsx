@@ -1,14 +1,9 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import {View, Text, TouchableOpacity, Alert} from 'react-native';
 import React, {useState} from 'react';
 import {S3_BUCKET_URL} from '@env';
 import RNFS from 'react-native-fs';
+import {styles} from '../styles/globalStyles';
+import Loading from '../components/loading';
 
 const Download = ({route}) => {
   const {message, output_file, uploaded_file} = route.params;
@@ -64,49 +59,13 @@ const Download = ({route}) => {
           <Text style={styles.file}>{output_file}</Text>
         </Text>
       </View>
-      <TouchableOpacity style={styles.customButton} onPress={handleDownload}>
+      <TouchableOpacity style={styles.downloadButton} onPress={handleDownload}>
         <Text style={[styles.buttonText, styles.darkText]}>Download</Text>
       </TouchableOpacity>
     </View>
   ) : (
-    <View style={styles.container}>
-      <ActivityIndicator size={'large'} />
-      <Text style={styles.lightText}>Downloading...</Text>
-    </View>
+    <Loading label="Downloading" />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  file: {
-    color: 'red',
-    fontSize: 20,
-  },
-  customButton: {
-    width: '80%',
-    backgroundColor: '#3498DB',
-    padding: 8,
-    margin: 5,
-  },
-  lightText: {
-    color: '#000000',
-  },
-  darkText: {
-    color: '#ffffff',
-  },
-  buttonText: {
-    textAlign: 'center',
-    fontSize: 20,
-  },
-  field: {
-    fontSize: 20,
-    maxWidth: '80%',
-    color: '#000000',
-  },
-});
 
 export default Download;

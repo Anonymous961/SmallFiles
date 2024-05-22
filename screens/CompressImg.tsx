@@ -2,9 +2,7 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   Image,
-  ActivityIndicator,
   TextInput,
   Alert,
 } from 'react-native';
@@ -12,20 +10,21 @@ import React, {useState} from 'react';
 import {pick, types} from 'react-native-document-picker';
 import {BACKEND_URL} from '@env';
 import axios from 'axios';
-
-interface Image {
-  name: string;
-  uri: string;
-}
+import {styles} from '../styles/globalStyles';
+import Loading from '../components/loading';
+import {ImageType} from '../utils/types';
 
 const CompressImg = ({navigation}) => {
-  const [image, setImage] = useState<Image | null>(null);
+  const [image, setImage] = useState<ImageType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [quality, setQuality] = useState<number>(60);
+  const [quality, setQuality] = useState<string>('');
   const checkQuality = () => {
-    if (!(quality >= 10 && quality <= 90)) {
-      Alert.alert('Invalid quality entered');
-      return false;
+    if (quality !== '') {
+      let value = parseFloat(quality);
+      if (!(value >= 20 && value <= 90)) {
+        Alert.alert('Invalid quality entered');
+        return false;
+      }
     }
     return true;
   };
@@ -55,7 +54,10 @@ const CompressImg = ({navigation}) => {
   const handleTextChange = (text: string) => {
     const parsedNumber = parseFloat(text);
     if (!isNaN(parsedNumber)) {
-      setQuality(parsedNumber);
+      setQuality(text);
+    }
+    if (parsedNumber === 0 || text === '') {
+      setQuality('');
     }
   };
   return !isLoading ? (
@@ -89,7 +91,7 @@ const CompressImg = ({navigation}) => {
         <TextInput
           style={[styles.quality]}
           onChangeText={handleTextChange}
-          value={quality.toString()}
+          value={quality}
           placeholder="Enter between 20-80"
           keyboardType="numeric"
         />
@@ -105,60 +107,8 @@ const CompressImg = ({navigation}) => {
       )}
     </View>
   ) : (
-    <View style={styles.container}>
-      <ActivityIndicator size={'large'} />
-      <Text style={styles.lightText}>Compressing...</Text>
-    </View>
+    <Loading label="Compressing" />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  field: {
-    fontSize: 22,
-    fontWeight: '400',
-    textAlign: 'center',
-  },
-  file: {
-    color: '#EA425C',
-  },
-  lightText: {
-    color: '#000000',
-  },
-  preview: {
-    margin: 10,
-    maxWidth: '80%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  Button: {
-    marginBottom: 10,
-    padding: 8,
-    borderRadius: 3,
-    width: '80%',
-  },
-  customButton: {
-    backgroundColor: '#487EB0',
-  },
-  selectButton: {
-    backgroundColor: '#3498DB',
-  },
-  buttonText: {
-    fontSize: 20,
-    color: 'white',
-    textAlign: 'center',
-  },
-  quality: {
-    borderWidth: 1,
-    borderRadius: 3,
-    width: '80%',
-    marginBottom: 5,
-    fontSize: 18,
-  },
-});
 
 export default CompressImg;
