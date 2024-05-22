@@ -1,8 +1,38 @@
+# SmallFiles
+
+SmallFiles is a React Native application designed to simplify everyday tasks with three core features: PDF compression, image compression, and PDF to DOC conversion. Our app is aimed at making your file management and conversion needs effortless and efficient.
+
+![intro](https://i.postimg.cc/cLXD5tm6/Screenshot-2024-05-22-235117.png 'intro')
+![landing](https://i.postimg.cc/Kj7XKvyL/Screenshot-2024-05-22-235122.png 'landing')
+![preview](https://i.postimg.cc/nhFkfVR5/Screenshot-2024-05-22-235131.png 'preview')
+
+Backend repository can be found [here](https://github.com/Anonymous961/pdf_compressor)
+
+## Features
+
+1. PDF Compression
+
+- Reduce the size of your PDF files without compromising on quality.
+- Easy-to-use interface for selecting and compressing PDFs.
+- Save storage space and make sharing documents faster.
+
+2. Image Compression
+
+- Compress images to save space while maintaining resolution.
+- Supports various image formats (JPEG, PNG, etc.).
+- Simple and quick process to compress multiple images at once.
+
+3. PDF to DOC Conversion
+
+- Convert PDF files to editable DOC format.
+- Preserve the original formatting and layout of the PDF.
+- Convenient for editing and reusing PDF content.
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+> **Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
 ## Step 1: Start the Metro Server
 

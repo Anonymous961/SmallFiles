@@ -1,57 +1,39 @@
 const slides = [
   {
     key: 's1',
-    text: 'Best Recharge offers',
-    title: 'Mobile Recharge',
+    text: 'Streamline your file management with tools for compressing, converting, and more—all in one place.',
+    title: 'Welcome to SmallFiles',
     image: {
-      uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_mobile_recharge.png',
+      uri: 'https://i.postimg.cc/SK7Tq9QW/small-Files-Icon-No-Bg.png',
     },
     backgroundColor: '#20d2bb',
   },
   {
     key: 's2',
-    title: 'Flight Booking',
-    text: 'Upto 25% off on Domestic Flights',
+    title: 'Compress PDF',
+    text: 'Effortlessly compress PDF files to reduce size without compromising quality.',
     image: {
-      uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_flight_ticket_booking.png',
+      uri: 'https://i.postimg.cc/tg17P3wj/removal-ai-3b1fb102-9542-497a-9301-44dba4229d11-images.png',
     },
     backgroundColor: '#febe29',
   },
   {
-    key: 's3',
-    title: 'Great Offers',
-    text: 'Enjoy Great offers on our all services',
-    image: {
-      uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_discount.png',
-    },
-    backgroundColor: '#22bcb5',
-  },
-  {
     key: 's4',
-    title: 'Best Deals',
-    text: ' Best Deals on all our services',
+    title: 'Compress Image',
+    text: ' Quickly compress images while maintaining high quality',
     image: {
-      uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_best_deals.png',
+      uri: 'https://i.postimg.cc/zBbd9cQc/jpegicon.png',
     },
     backgroundColor: '#3395ff',
   },
   {
     key: 's5',
-    title: 'Bus Booking',
-    text: 'Enjoy Travelling on Bus with flat 100% off',
+    title: 'Convert PDF to DOC',
+    text: 'Seamlessly convert PDF files to editable Word documents',
     image: {
-      uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_bus_ticket_booking.png',
+      uri: 'https://i.postimg.cc/tgG8tym4/removal-ai-df4a1457-e056-4958-85dd-0a00af307d47-docx-icon.png',
     },
     backgroundColor: '#f6437b',
-  },
-  {
-    key: 's6',
-    title: 'Train Booking',
-    text: ' 10% off on first Train booking',
-    image: {
-      uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_train_ticket_booking.png',
-    },
-    backgroundColor: '#febe29',
   },
 ];
 export default slides;
