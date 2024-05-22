@@ -3,9 +3,9 @@
 SmallFiles is a React Native application designed to simplify everyday tasks with three core features: PDF compression, image compression, and PDF to DOC conversion. Our app is aimed at making your file management and conversion needs effortless and efficient.
 
 <div style="display: flex; flex-direction: row;">
-  <img src="https://i.postimg.cc/cLXD5tm6/Screenshot-2024-05-22-235117.png" alt="intro" title="intro">
-  <img src="https://i.postimg.cc/Kj7XKvyL/Screenshot-2024-05-22-235122.png" alt="landing" title="landing">
-  <img src="https://i.postimg.cc/nhFkfVR5/Screenshot-2024-05-22-235131.png" alt="preview" title="preview">
+  <img src="https://i.postimg.cc/cLXD5tm6/Screenshot-2024-05-22-235117.png" height="500px" alt="intro" title="intro">
+  <img src="https://i.postimg.cc/Kj7XKvyL/Screenshot-2024-05-22-235122.png" height="500px" alt="landing" title="landing">
+  <img src="https://i.postimg.cc/nhFkfVR5/Screenshot-2024-05-22-235131.png" height="500px" alt="preview" title="preview">
 </div>
 
 <p>Backend repository can be found <a href="https://github.com/Anonymous961/pdf_compressor">here</a></p>
